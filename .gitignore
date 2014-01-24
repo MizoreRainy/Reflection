@@ -37,3 +37,5 @@ Reflection/Library/assetDatabase3
 Reflection/Library/guidmapper
 
 Reflection/Library/InspectorExpandedItems.asset
+
+*.meta
