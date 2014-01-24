@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class RabbitsPool : MonoBehaviour 
+public class RabbitsPool 
 {
 	//------------------------------------------------------------------------
 	
@@ -30,6 +30,7 @@ public class RabbitsPool : MonoBehaviour
 	//------------------------------------------------------------------------
 
 	public	int					maxRabbit		=	6;
+
 	private	List<Transform>		rabbitsList;
 	
 	//------------------------------------------------------------------------
@@ -44,11 +45,35 @@ public class RabbitsPool : MonoBehaviour
 		
 		for(int i = 0; i < maxRabbit; i++)
 		{
-			Transform	_rabbit		=	Instantiate( _rabbitTransform )  as Transform;
+			Transform	_rabbit		=	UnityEditor.Editor.Instantiate( _rabbitTransform )  as Transform;
 			rabbitsList.Add( _rabbit );
 
 			_rabbit.parent	=	_parent;
+			_rabbit.gameObject.SetActive( false );
 		}
+
+		Debug.Log(rabbitsList.Count);
+	}
+	
+	//------------------------------------------------------------------------
+	
+	public Transform SpawnRabbit() 
+	{
+		Transform	_rabbit		=	null;
+
+		for(int i = 0; i < maxRabbit; i++)
+		{
+			Debug.Log( rabbitsList[0] );
+
+			if( rabbitsList[i].gameObject.activeInHierarchy )
+				continue;
+
+			rabbitsList[i].gameObject.SetActive( true );
+			_rabbit		=	rabbitsList[i];
+			break;
+		}
+
+		return _rabbit;
 	}
 	
 	//------------------------------------------------------------------------
