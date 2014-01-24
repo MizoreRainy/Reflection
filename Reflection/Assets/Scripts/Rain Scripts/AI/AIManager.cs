@@ -13,15 +13,28 @@ public class AIManager : MonoBehaviour
 	#endregion
 	
 	//------------------------------------------------------------------------
-
+	
+	public Transform	spawnNodes;
+	public Transform	waypointNodes;
 	public Transform	baseAITransform;
-	public Transform[]	spawnNodes;
 	
 	//------------------------------------------------------------------------
 	
 	void Awake () 
 	{
 		instance	=	this;
+	}
+	
+	//------------------------------------------------------------------------
+
+	public List<Vector3> GetWaypoint()
+	{
+		List<Vector3>	_waypointList	=	new List<Vector3>();
+
+		for(int i = 0; i < waypointNodes.childCount; i++)
+			_waypointList.Add(waypointNodes.GetChild(i).position);
+
+		return _waypointList;
 	}
 	
 	//------------------------------------------------------------------------
@@ -43,7 +56,7 @@ public class AIManager : MonoBehaviour
 
 	List<Vector3> GetRandomizeNode(int _nodeCount)
 	{
-		if( _nodeCount > spawnNodes.Length )
+		if( _nodeCount > spawnNodes.childCount )
 		{
 			Debug.LogError( "Not enough Node" );
 			return null;
@@ -54,12 +67,13 @@ public class AIManager : MonoBehaviour
 
 		for(int i = 0; i < _nodeCount; i++)
 		{
-			int	_nodeIndex	=	Random.Range(0, spawnNodes.Length);
+			int	_nodeIndex	=	Random.Range(0, spawnNodes.childCount);
 
 			while( _indexList.IndexOf( _nodeIndex ) != -1 )
-				_nodeIndex	=	Random.Range(0, spawnNodes.Length);
+				_nodeIndex	=	Random.Range(0, spawnNodes.childCount);
 
-			_nodeList.Add( spawnNodes[_nodeIndex].position );
+			_indexList.Add( _nodeIndex );
+			_nodeList.Add( spawnNodes.GetChild( _nodeIndex ).position );
 		}
 
 		return	_nodeList;

@@ -51,8 +51,6 @@ public class RabbitsPool
 			_rabbit.parent	=	_parent;
 			_rabbit.gameObject.SetActive( false );
 		}
-
-		Debug.Log(rabbitsList.Count);
 	}
 	
 	//------------------------------------------------------------------------
@@ -63,8 +61,6 @@ public class RabbitsPool
 
 		for(int i = 0; i < maxRabbit; i++)
 		{
-			Debug.Log( rabbitsList[0] );
-
 			if( rabbitsList[i].gameObject.activeInHierarchy )
 				continue;
 
