@@ -1,10 +1,11 @@
 # =============== #
 # Unity generated #
 # =============== #
-Reflection/Temp/
-Reflection/Obj/
-Reflection/UnityGenerated/
-Reflection/Library/
+/Reflection/Temp/
+/Reflection/Obj/
+/Reflection/UnityGenerated/
+/Reflection/Library/
+/Library/
  
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
