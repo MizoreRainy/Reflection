@@ -43,9 +43,9 @@ public class AIManager : MonoBehaviour
 	{
 		RabbitsPool.instance.InitRabbits( baseAITransform, transform );
 
-		List<Vector3>	_spawnNode	=	GetRandomizeNode( 4 );
+		List<Vector3>	_spawnNode	=	GetRandomizeNode( 1 );
 
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 1; i++)
 		{
 			Transform	_rabit	=	RabbitsPool.instance.SpawnRabbit();
 			_rabit.position		=	_spawnNode[i];

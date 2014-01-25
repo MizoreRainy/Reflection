@@ -21,8 +21,7 @@ public class RabbitAI : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
-	public	LayerMask			playerLayer;
-	public	LayerMask			wallLayer;
+	public	LayerMask			sightMask;
 	
 	//------------------------------------------------------------------------
 	
@@ -34,7 +33,7 @@ public class RabbitAI : MonoBehaviour
 	private	Transform			trans;
 	private	Transform			target;
 
-	private	RabbitState			state					=	RabbitState.idle;
+	public	RabbitState			state					=	RabbitState.idle;
 
 	private	NavMeshAgent		agent;
 	private	List<Vector3>		waypointList;
@@ -117,10 +116,9 @@ public class RabbitAI : MonoBehaviour
 	{
 		if( _go.CompareTag("Player") )
 		{
-			Debug.Log( "Player founded!" );
-			state	=	RabbitState.chasing;
 			target	=	_go.transform;
-			IsPlayerOnSight();
+
+			StartChasing();
 		}
 	}
 	
@@ -131,6 +129,8 @@ public class RabbitAI : MonoBehaviour
 		if( _go.CompareTag("Player") )
 		{
 			target	=	null;
+
+			SetIdleState(false);
 		}
 	}
 	
@@ -140,40 +140,35 @@ public class RabbitAI : MonoBehaviour
 	{
 		if( _go.CompareTag("Player") )
 		{
-			state	=	RabbitState.attacking;
-			ActivateInteraction();
+//			Debug.Log( "Attacking!" );
+//			state	=	RabbitState.attacking;
+//			ActivateInteraction();
 		}
 	}
 	
 	//------------------------------------------------------------------------
 
-	bool IsPlayerOnSight()
+	bool IsPlayerOnSight(bool _isDrawline = false)
 	{
-//		RaycastHit H;
-//		
-//		// goes through wall1 (layer 8,) hits wall2:
-//		if(Physics.Raycast(transform.position, transform.forward, out H, 100, ~1<<8))
-//			Debug.Log(H.transform.name);
-//		
-//		// goes through both walls (layer 8 and 9) and hits target:
-//		int skip1n2 = ~((1<<8)|(1<<9));
-//		if(Physics.Raycast(transform.position, transform.forward, out H, 100, skip1n2))
-//			Debug.Log(H.transform.name);
-//		
-//		// The previous hits ignoreRaycast. This skips 8,9 and ignoreRC(layer 2):
-//		int skip = ~((1<<8)|(1<<9)|(1<<2));
-//		if(Physics.Raycast(transform.position, transform.forward, out H, 100, skip1n2))
-//		{
-//		}
+		if( target == null )
+			return false;
 
 		RaycastHit	_hit;
 		Vector3 	_rayDirection = target.position - trans.position;
 
-		if( Physics.Raycast( trans.position, _rayDirection.normalized, out _hit, sightRange, 1 << playerLayer ) ) {
-			print ("Did Hit");
-		} else {
-			print ("Did not Hit");
-		}
+		if( Physics.Raycast( trans.position, _rayDirection.normalized, out _hit, sightRange, sightMask ) ) 
+		{
+			if( _hit.collider.tag.Equals( "Player" ) )
+			{
+				if( _isDrawline )
+					Debug.DrawLine (trans.position, _hit.point, Color.red);
+
+				Debug.Log("Found 'ya you little bitch!!");
+				return true;
+			}
+		} 
+		
+		Debug.Log("Where are you, I'm gonna fucking kill you!");
 		return false;
 	}
 
@@ -181,6 +176,27 @@ public class RabbitAI : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 
+	#region Action Codes
+	
+	void SetIdleState(bool _isMoveNext = true)
+	{
+		state	=	RabbitState.idle;
+
+		if( _isMoveNext )
+			MoveToNextWaypoint();
+	}
+
+	//------------------------------------------------------------------------
+
+	void StartChasing()
+	{
+		if( IsPlayerOnSight() )
+		{
+			state	=	RabbitState.chasing;
+		}
+	}
+
+	#endregion
 	#region AI Updates
 
 	void Update () 
@@ -192,9 +208,6 @@ public class RabbitAI : MonoBehaviour
 		else if ( state == RabbitState.chasing )
 		{
 			ChasingUpdate();
-
-			if(target != null)
-				Debug.DrawLine (trans.position, target.transform.position, Color.red);
 		}
 	}
 	
@@ -202,9 +215,15 @@ public class RabbitAI : MonoBehaviour
 
 	void IdleUpdate()
 	{
-		//		Debug.Log( Vector3.Distance( trans.position, agent.destination ) );
-		if( Vector3.Distance( trans.position, agent.destination ) < agent.stoppingDistance + nextWaypointOffset )
-			MoveToNextWaypoint();
+		if( IsPlayerOnSight( true ) )
+		{
+			StartChasing();
+		}
+		else
+		{
+			if( Vector3.Distance( trans.position, agent.destination ) < agent.stoppingDistance + nextWaypointOffset )
+				MoveToNextWaypoint();
+		}
 	}
 	
 	//------------------------------------------------------------------------
@@ -213,15 +232,17 @@ public class RabbitAI : MonoBehaviour
 	{
 		if( target != null )
 		{
-			agent.SetDestination( target.position );
+
+			if( IsPlayerOnSight( true ) )
+			{
+				agent.SetDestination( target.position );
+			}
+			else
+				SetIdleState();
 		}
 		else
 		{
-			if( Vector3.Distance( trans.position, agent.destination ) < agent.stoppingDistance + nextWaypointOffset )
-			{
-				state	=	RabbitState.idle;
-				MoveToNextWaypoint();
-			}
+			SetIdleState();
 		}
 	}
 	
