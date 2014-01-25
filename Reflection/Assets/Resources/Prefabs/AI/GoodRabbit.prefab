@@ -168,15 +168,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a34e84874bee41859614222339e8fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 2.5
-  interactiveRange: 1.5
-  nextWaypointOffset: 1.5
-  playerLayer:
+  sightRange: 5
+  interactiveRange: 2.5
+  nextWaypointOffset: 1
+  sightMask:
     serializedVersion: 2
-    m_Bits: 0
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   sightSensor: {fileID: 11400002}
   interactiveSensor: {fileID: 11400004}
 --- !u!114 &11400002
