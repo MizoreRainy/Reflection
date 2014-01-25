@@ -11,11 +11,16 @@ public enum RabbitState
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(RabbitAnimationController))]
 
 public class RabbitAI : MonoBehaviour 
 {
 	//------------------------------------------------------------------------
+
+	public	bool				isGood					=	true;
 	
+	//------------------------------------------------------------------------
+
 	public	float				idleDelay				=	2f;
 	public	float				sightRange				=	2.5f;
 	public	float				interactiveRange		=	1.5f;
@@ -32,15 +37,16 @@ public class RabbitAI : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
-	public	float				idleDelayCount			=	0f;
+	private	float				idleDelayCount			=	0f;
 
 	private	Transform			trans;
 	private	Transform			target;
 
 	private	RabbitState			state					=	RabbitState.idle;
-
-	private	NavMeshAgent		agent;
-	private	List<Vector3>		waypointList;
+	
+	private	NavMeshAgent					agent;
+	private	RabbitAnimationController		animController;
+	private	List<Vector3>					waypointList;
 
 	//------------------------------------------------------------------------
 
@@ -53,10 +59,13 @@ public class RabbitAI : MonoBehaviour
 
 	void Awake () 
 	{
-		trans	=	transform;
-		agent	=	GetComponent<NavMeshAgent>();
-		
-		target	=	null;
+		trans			=	transform;
+		agent			=	GetComponent<NavMeshAgent>();
+		animController	=	GetComponent<RabbitAnimationController>();
+		animController.SetGood( isGood );
+
+		target			=	null;
+
 	}
 	
 	//------------------------------------------------------------------------
@@ -187,11 +196,13 @@ public class RabbitAI : MonoBehaviour
 	{
 		idleDelayCount	=	0f;
 		state			=	RabbitState.idle;
+		animController.SetAnimationState( RabbitAnimationState.Idle );
 	}
 	
 	void SetRoamingState(bool _isMoveNext = true)
 	{
 		state	=	RabbitState.roaming;
+		animController.SetAnimationState( RabbitAnimationState.Walk );
 
 		if( _isMoveNext )
 			MoveToNextWaypoint();
