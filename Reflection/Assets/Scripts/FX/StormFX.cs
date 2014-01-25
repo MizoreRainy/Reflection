@@ -3,6 +3,9 @@ using System.Collections;
 
 public class StormFX : MonoBehaviour {
 
+
+
+
 	public AudioSource stormAudio;
 
 	public AudioClip [] stormClips;
@@ -22,8 +25,14 @@ public class StormFX : MonoBehaviour {
 			//animation.Play("stormAnim");
 			stormAudio.clip = stormClips[Random.Range(0,stormClips.Length)];
 			stormAudio.Play();
+
 		}
+
+
+		
+		}
+
+
 	}
 
 
-}

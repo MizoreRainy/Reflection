@@ -19,20 +19,18 @@ public class GUI_ShakingText : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        
-            if (shake_intensity > 0)
+        if (shake_intensity > 0)
+        {
+            transform.localPosition = originPosition + Random.insideUnitSphere * shake_intensity;
+            shake_intensity -= shake_decay;
+        } 
+        else
+        {
+            if(_isEndless)
             {
-                transform.localPosition = originPosition + Random.insideUnitSphere * shake_intensity;
-                shake_intensity -= shake_decay;
-            } 
-            else
-            {
-                if(_isEndless)
-                {
-                    shake_intensity = permanent_intensity;
-                }
+                shake_intensity = permanent_intensity;
             }
-
+        }
     }
 
     public void Shake(float intensity, float decay ,bool _endless)
