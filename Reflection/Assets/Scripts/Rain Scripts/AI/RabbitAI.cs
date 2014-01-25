@@ -5,8 +5,9 @@ using System.Collections.Generic;
 public enum RabbitState
 {
 	idle		=	0,
-	chasing		=	1,
-	attacking	=	2
+	roaming		=	1,
+	chasing		=	2,
+	attacking	=	3
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -14,7 +15,8 @@ public enum RabbitState
 public class RabbitAI : MonoBehaviour 
 {
 	//------------------------------------------------------------------------
-
+	
+	public	float				idleDelay				=	2f;
 	public	float				sightRange				=	2.5f;
 	public	float				interactiveRange		=	1.5f;
 	public	float				nextWaypointOffset		=	1.5f;
@@ -30,10 +32,12 @@ public class RabbitAI : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
+	public	float				idleDelayCount			=	0f;
+
 	private	Transform			trans;
 	private	Transform			target;
 
-	public	RabbitState			state					=	RabbitState.idle;
+	private	RabbitState			state					=	RabbitState.idle;
 
 	private	NavMeshAgent		agent;
 	private	List<Vector3>		waypointList;
@@ -53,6 +57,12 @@ public class RabbitAI : MonoBehaviour
 		agent	=	GetComponent<NavMeshAgent>();
 		
 		target	=	null;
+	}
+	
+	//------------------------------------------------------------------------
+	
+	void Start () 
+	{
 		
 		if(sightSensor == null || interactiveSensor == null)
 		{
@@ -67,12 +77,7 @@ public class RabbitAI : MonoBehaviour
 		sightSensor.leaveSensorDelegate		=	OnLeaveSight;
 		
 		interactiveSensor.enterSensorDelegate		=	OnEnterInteractive;
-	}
-	
-	//------------------------------------------------------------------------
-	
-	void Start () 
-	{
+
 		SetWaypoint( AIManager.instance.GetWaypoint() );
 		MoveToNextWaypoint();
 	}
@@ -130,7 +135,7 @@ public class RabbitAI : MonoBehaviour
 		{
 			target	=	null;
 
-			SetIdleState(false);
+			SetRoamingState(false);
 		}
 	}
 	
@@ -178,9 +183,15 @@ public class RabbitAI : MonoBehaviour
 
 	#region Action Codes
 	
-	void SetIdleState(bool _isMoveNext = true)
+	void SetIdleState()
 	{
-		state	=	RabbitState.idle;
+		idleDelayCount	=	0f;
+		state			=	RabbitState.idle;
+	}
+	
+	void SetRoamingState(bool _isMoveNext = true)
+	{
+		state	=	RabbitState.roaming;
 
 		if( _isMoveNext )
 			MoveToNextWaypoint();
@@ -197,6 +208,9 @@ public class RabbitAI : MonoBehaviour
 	}
 
 	#endregion
+	
+	//------------------------------------------------------------------------
+
 	#region AI Updates
 
 	void Update () 
@@ -205,6 +219,10 @@ public class RabbitAI : MonoBehaviour
 		{
 			IdleUpdate();
 		}
+		if( state == RabbitState.roaming )
+		{
+			RoamingUpdate();
+		}
 		else if ( state == RabbitState.chasing )
 		{
 			ChasingUpdate();
@@ -212,8 +230,19 @@ public class RabbitAI : MonoBehaviour
 	}
 	
 	//------------------------------------------------------------------------
-
+	
 	void IdleUpdate()
+	{
+		idleDelayCount	+=	Time.deltaTime;
+		if( idleDelayCount >= idleDelay )
+		{
+			SetRoamingState(true);
+		}
+	}
+	
+	//------------------------------------------------------------------------
+
+	void RoamingUpdate()
 	{
 		if( IsPlayerOnSight( true ) )
 		{
@@ -222,7 +251,7 @@ public class RabbitAI : MonoBehaviour
 		else
 		{
 			if( Vector3.Distance( trans.position, agent.destination ) < agent.stoppingDistance + nextWaypointOffset )
-				MoveToNextWaypoint();
+				SetIdleState();
 		}
 	}
 	
@@ -238,11 +267,11 @@ public class RabbitAI : MonoBehaviour
 				agent.SetDestination( target.position );
 			}
 			else
-				SetIdleState();
+				SetRoamingState();
 		}
 		else
 		{
-			SetIdleState();
+			SetRoamingState();
 		}
 	}
 	
