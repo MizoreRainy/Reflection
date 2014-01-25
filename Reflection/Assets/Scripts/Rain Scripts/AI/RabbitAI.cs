@@ -18,6 +18,7 @@ public class RabbitAI : MonoBehaviour
 	//------------------------------------------------------------------------
 
 	public	bool				isGood					=	true;
+	public	bool				isHaveBullet			=	true;
 	
 	//------------------------------------------------------------------------
 
@@ -156,9 +157,7 @@ public class RabbitAI : MonoBehaviour
 	{
 		if( _go.CompareTag("Player") )
 		{
-//			Debug.Log( "Attacking!" );
-//			state	=	RabbitState.attacking;
-//			ActivateInteraction();
+			InteractWithPlayer(_go);
 		}
 	}
 	
@@ -201,6 +200,8 @@ public class RabbitAI : MonoBehaviour
 		animController.SetAnimationState( RabbitAnimationState.Idle );
 	}
 	
+	//------------------------------------------------------------------------
+	
 	void SetRoamingState(bool _isMoveNext = true)
 	{
 		state	=	RabbitState.roaming;
@@ -220,6 +221,35 @@ public class RabbitAI : MonoBehaviour
 			state	=	RabbitState.chasing;
             agent.speed = chasing_Speed;
 		}
+	}
+	
+	//------------------------------------------------------------------------
+	
+	void InteractWithPlayer(GameObject _player)
+	{
+		if( !isGood )
+		{
+			_player.SendMessage("GetHit");
+		}
+		else
+		{
+			if( isHaveBullet )
+			{
+				isHaveBullet	=	false;
+				animController.SetAnimationState( RabbitAnimationState.Action );
+			}
+			else
+			{
+				animController.SetAnimationState( RabbitAnimationState.Action );
+			}
+		}
+	}
+	
+	//------------------------------------------------------------------------
+	
+	void GetHit()
+	{
+		animController.SetAnimationState( RabbitAnimationState.Dead );
 	}
 
 	#endregion
