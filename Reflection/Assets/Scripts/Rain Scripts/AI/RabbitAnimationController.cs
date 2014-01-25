@@ -15,8 +15,8 @@ public class RabbitAnimationController : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
-	public RabbitAI	rabbitAI;
-	public Animator	rabbitAnimator;
+	public RabbitAI		rabbitAI;
+	public Animator[]	rabbitAnimator;
 	
 	//------------------------------------------------------------------------
 
@@ -48,29 +48,41 @@ public class RabbitAnimationController : MonoBehaviour
 
 	void SetSpeed (float _speed) 
 	{
-		rabbitAnimator.SetFloat("Speed", _speed);
+		for(int i = 0; i < rabbitAnimator.Length; i++)
+		{
+			rabbitAnimator[i].SetFloat("Speed", _speed);
+		}
 	}
 	
 	//------------------------------------------------------------------------
 	
 	void PlayDeath () 
 	{
-		rabbitAnimator.SetTrigger("Dead");
+		for(int i = 0; i < rabbitAnimator.Length; i++)
+		{
+			rabbitAnimator[i].SetTrigger("Dead");
+		}
 	}
 	
 	//------------------------------------------------------------------------
 	
 	void ActivateAction () 
 	{
-		rabbitAnimator.SetBool( "isHaveBullet", rabbitAI.isHaveBullet );
-		rabbitAnimator.SetTrigger("Action");
+		for(int i = 0; i < rabbitAnimator.Length; i++)
+		{
+			rabbitAnimator[i].SetBool( "isHaveBullet", rabbitAI.isHaveBullet );
+			rabbitAnimator[i].SetTrigger("Action");
+		}
 	}
 	
 	//------------------------------------------------------------------------
 	
 	public void SetGood (bool _isGood) 
 	{
-		rabbitAnimator.SetBool("isGood", _isGood);
+		for(int i = 0; i < rabbitAnimator.Length; i++)
+		{
+			rabbitAnimator[i].SetBool("isGood", _isGood);
+		}
 	}
 	
 	//------------------------------------------------------------------------

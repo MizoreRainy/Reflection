@@ -88,8 +88,9 @@ public class RabbitAI : MonoBehaviour
 		
 		interactiveSensor.enterSensorDelegate		=	OnEnterInteractive;
 
+		agent.enabled	=	true;
 		SetWaypoint( AIManager.instance.GetWaypoint() );
-		MoveToNextWaypoint();
+//		MoveToNextWaypoint();
 	}
 
 	#endregion
@@ -119,6 +120,7 @@ public class RabbitAI : MonoBehaviour
 			_nextWaypoint	=	waypointList[ Random.Range(0, waypointList.Count)];
 		
 		agent.SetDestination( _nextWaypoint );
+
 	}
 
 	#endregion
@@ -232,6 +234,7 @@ public class RabbitAI : MonoBehaviour
 			if( isHaveBullet )
 			{
 				isHaveBullet	=	false;
+				_player.SendMessage("GiveBullet");
 				animController.SetAnimationState( RabbitAnimationState.Action );
 			}
 			else

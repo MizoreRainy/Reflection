@@ -55,20 +55,39 @@ public class RabbitsPool
 	
 	//------------------------------------------------------------------------
 	
-	public Transform SpawnRabbit() 
+	public Transform SpawnGoodRabbit() 
 	{
 		Transform	_rabbit		=	null;
-
-		for(int i = 0; i < maxRabbit; i++)
+		
+		for(int i = 0; i < rabbitsList.Count; i++)
 		{
-			if( rabbitsList[i].gameObject.activeInHierarchy )
+			if( rabbitsList[i].gameObject.activeInHierarchy || !rabbitsList[i].name.Contains("Good")  )
 				continue;
-
+			
 			rabbitsList[i].gameObject.SetActive( true );
 			_rabbit		=	rabbitsList[i];
 			break;
 		}
+		
+		return _rabbit;
+	}
+	
+	//------------------------------------------------------------------------
+	
+	public Transform SpawnBadRabbit() 
+	{
+		Transform	_rabbit		=	null;
 
+		for(int i = 0; i < rabbitsList.Count; i++)
+		{
+			if( rabbitsList[i].gameObject.activeInHierarchy || !rabbitsList[i].name.Contains("Bad") )
+				continue;
+			
+			rabbitsList[i].gameObject.SetActive( true );
+			_rabbit		=	rabbitsList[i];
+			break;
+		}
+		
 		return _rabbit;
 	}
 	

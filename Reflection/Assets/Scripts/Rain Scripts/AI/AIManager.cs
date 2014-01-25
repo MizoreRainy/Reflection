@@ -13,10 +13,14 @@ public class AIManager : MonoBehaviour
 	#endregion
 	
 	//------------------------------------------------------------------------
-	
+
+	public int			badRabbitCount	=	3;
+	public int			goodRabbitCount	=	3;
+
 	public Transform	spawnNodes;
 	public Transform	waypointNodes;
-	public Transform	baseAITransform;
+	public Transform	goodRabbitTransform;
+	public Transform	badRabbitTransform;
 	
 	//------------------------------------------------------------------------
 	
@@ -41,14 +45,25 @@ public class AIManager : MonoBehaviour
 	
 	void Start () 
 	{
-		RabbitsPool.instance.InitRabbits( baseAITransform, transform );
+		
+		List<Vector3>	_spawnNode	=	GetRandomizeNode( badRabbitCount + goodRabbitCount );
+		
+		int	_index	=	0;
 
-		List<Vector3>	_spawnNode	=	GetRandomizeNode( 1 );
+		RabbitsPool.instance.InitRabbits( badRabbitTransform, transform );
 
-		for(int i = 0; i < 1; i++)
+		for(_index = 0; _index < badRabbitCount; _index++)
 		{
-			Transform	_rabit	=	RabbitsPool.instance.SpawnRabbit();
-			_rabit.position		=	_spawnNode[i];
+			Transform	_rabit	=	RabbitsPool.instance.SpawnBadRabbit();
+			_rabit.position		=	_spawnNode[_index];
+		}
+		
+		RabbitsPool.instance.InitRabbits( goodRabbitTransform, transform );
+		
+		for(_index = badRabbitCount ; _index < (badRabbitCount + goodRabbitCount); _index++)
+		{
+			Transform	_rabit	=	RabbitsPool.instance.SpawnGoodRabbit();
+			_rabit.position		=	_spawnNode[_index];
 		}
 	}
 	

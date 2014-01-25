@@ -534,7 +534,7 @@ GameObject:
   - 4: {fileID: 400068}
   - 95: {fileID: 9500000}
   m_Layer: 0
-  m_Name: Rabbit
+  m_Name: GoodRabbit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1048,6 +1048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGood: 1
+  isHaveBullet: 1
   idleDelay: 4
   sightRange: 5
   interactiveRange: 2.5
@@ -1091,7 +1092,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rabbitAI: {fileID: 11400000}
-  rabbitAnimator: {fileID: 9500000}
+  rabbitAnimator:
+  - {fileID: 9500000}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -1124,7 +1126,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 100006}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: .349999994
   m_Height: 1.5
   m_Direction: 1
@@ -1187,7 +1189,7 @@ NavMeshAgent:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: .5
   m_Speed: 1
   m_Acceleration: 8
