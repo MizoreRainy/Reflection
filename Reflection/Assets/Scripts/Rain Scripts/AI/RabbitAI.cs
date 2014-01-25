@@ -25,6 +25,8 @@ public class RabbitAI : MonoBehaviour
 	public	float				sightRange				=	2.5f;
 	public	float				interactiveRange		=	1.5f;
 	public	float				nextWaypointOffset		=	1.5f;
+    public  float               chasing_Speed           =   2.5f;
+    public  float               roaming_Speed           =   1f;
 	
 	//------------------------------------------------------------------------
 	
@@ -203,6 +205,7 @@ public class RabbitAI : MonoBehaviour
 	{
 		state	=	RabbitState.roaming;
 		animController.SetAnimationState( RabbitAnimationState.Walk );
+        agent.speed = roaming_Speed;
 
 		if( _isMoveNext )
 			MoveToNextWaypoint();
@@ -215,6 +218,7 @@ public class RabbitAI : MonoBehaviour
 		if( IsPlayerOnSight() )
 		{
 			state	=	RabbitState.chasing;
+            agent.speed = chasing_Speed;
 		}
 	}
 

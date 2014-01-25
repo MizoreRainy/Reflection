@@ -13,7 +13,8 @@ public class AIManager : MonoBehaviour
 	#endregion
 	
 	//------------------------------------------------------------------------
-	
+    [HideInInspector]
+    public int rabbitCount = 0;
 	public Transform	spawnNodes;
 	public Transform	waypointNodes;
 	public Transform	baseAITransform;
@@ -43,9 +44,9 @@ public class AIManager : MonoBehaviour
 	{
 		RabbitsPool.instance.InitRabbits( baseAITransform, transform );
 
-		List<Vector3>	_spawnNode	=	GetRandomizeNode( 1 );
+        List<Vector3> _spawnNode = GetRandomizeNode(rabbitCount);
 
-		for(int i = 0; i < 1; i++)
+        for (int i = 0; i < rabbitCount; i++)
 		{
 			Transform	_rabit	=	RabbitsPool.instance.SpawnRabbit();
 			_rabit.position		=	_spawnNode[i];
@@ -76,6 +77,11 @@ public class AIManager : MonoBehaviour
 			_nodeList.Add( spawnNodes.GetChild( _nodeIndex ).position );
 		}
 
+        for (int i = 0; i < _nodeList.Count; ++i)
+        {
+            Debug.Log(" SpawnNodesIndex- "+ i +" Node : " + _nodeList[i]);
+        }
+        
 		return	_nodeList;
 	}
 	
