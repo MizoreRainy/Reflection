@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class JumpScare : MonoBehaviour {
+public class SoundPlusMovement : MonoBehaviour {
 	public AudioSource panicscare;
 	public GameObject face;
 	private bool moveFace = false;
