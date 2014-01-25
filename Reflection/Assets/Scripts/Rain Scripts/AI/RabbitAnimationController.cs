@@ -6,6 +6,7 @@ public enum RabbitAnimationState
 	Idle,
 	Walk,
 	Run,
+	Dead,
 	Action
 }
 
@@ -33,6 +34,10 @@ public class RabbitAnimationController : MonoBehaviour
 		{
 			SetSpeed(2f);
 		}
+		else if( _state == RabbitAnimationState.Dead )
+		{
+			PlayDeath();
+		}
 		else if( _state == RabbitAnimationState.Action )
 		{
 			ActivateAction();
@@ -48,8 +53,16 @@ public class RabbitAnimationController : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
+	void PlayDeath () 
+	{
+		rabbitAnimator.SetTrigger("Dead");
+	}
+	
+	//------------------------------------------------------------------------
+	
 	void ActivateAction () 
 	{
+		rabbitAnimator.SetBool( "isHaveBullet", rabbitAI.isHaveBullet );
 		rabbitAnimator.SetTrigger("Action");
 	}
 	
