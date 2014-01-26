@@ -302,12 +302,12 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 Spine
       position: {x: -.0406939313, y: -3.66945569e-05, z: .00209398032}
-      rotation: {x: .997991502, y: .0259701312, z: -.051179722, w: -.026816234}
+      rotation: {x: .997991562, y: .0259700809, z: -.0511796549, w: -.026816193}
       scale: {x: 1, y: 1, z: 1}
       transformModified: 1
     - name: Bip001 L Thigh
       position: {x: .0406938531, y: .000105964573, z: .033338856}
-      rotation: {x: -.077474609, y: .980799973, z: .178907201, w: .00462802732}
+      rotation: {x: -.0774746016, y: .980799913, z: .178907186, w: .00462802686}
       scale: {x: 1, y: 1.00000012, z: 1.00000012}
       transformModified: 1
     - name: Bip001 L Calf
@@ -317,7 +317,7 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 L Foot
       position: {x: -.177164167, y: 0, z: 0}
-      rotation: {x: .0226283316, y: .0163879208, z: -.0926955715, w: .995302439}
+      rotation: {x: .0226280186, y: .0163879246, z: -.0926956609, w: .995302439}
       scale: {x: .999999821, y: .999999881, z: 1}
       transformModified: 1
     - name: Bip001 L Toe0
@@ -352,7 +352,7 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 R Foot
       position: {x: -.177164212, y: 3.57627861e-09, z: 4.76837148e-09}
-      rotation: {x: -.00509080244, y: -.0567045137, z: -.134977952, w: .989211679}
+      rotation: {x: -.00509091374, y: -.0567045063, z: -.134977967, w: .989211619}
       scale: {x: 1.00000012, y: 1, z: .99999994}
       transformModified: 1
     - name: Bip001 R Toe0
@@ -377,7 +377,7 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 Spine1
       position: {x: -.0460604466, y: -3.65288543e-05, z: 2.42233273e-06}
-      rotation: {x: -.0339315385, y: .0295151342, z: .0296070278, w: .998549461}
+      rotation: {x: -.0339315347, y: .0295151323, z: .0296070259, w: .998549402}
       scale: {x: 1, y: 1, z: 1.00000012}
       transformModified: 1
     - name: Bip001 Spine2
@@ -412,12 +412,12 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 L UpperArm
       position: {x: -.0460626781, y: -2.38418574e-09, z: 3.81469718e-08}
-      rotation: {x: .267048985, y: .0534715615, z: .0432134047, w: .961227417}
+      rotation: {x: .267049074, y: .0534717925, z: .0432134233, w: .961227417}
       scale: {x: 1, y: 1, z: .99999994}
       transformModified: 1
     - name: Bip001 L Forearm
       position: {x: -.106298521, y: 0, z: 0}
-      rotation: {x: -.0045972229, y: .0129236486, z: .0219218265, w: .999665558}
+      rotation: {x: -.00459742732, y: .0129232239, z: .0219220538, w: .999665558}
       scale: {x: .99999994, y: 1.00000012, z: 1}
       transformModified: 1
     - name: Bip001 L Hand
@@ -442,12 +442,12 @@ ModelImporter:
       transformModified: 1
     - name: Bip001 R UpperArm
       position: {x: -.0460626893, y: 0, z: 0}
-      rotation: {x: -.300632447, y: -.0501140878, z: .0753909349, w: .949434042}
+      rotation: {x: -.300632536, y: -.0501139499, z: .0753909573, w: .949434042}
       scale: {x: .99999994, y: .99999994, z: 1}
       transformModified: 1
     - name: Bip001 R Forearm
       position: {x: -.106298558, y: 0, z: 0}
-      rotation: {x: .00438153651, y: -.011664913, z: .0174648874, w: .999769807}
+      rotation: {x: .00438159006, y: -.0116649382, z: .017464865, w: .999769807}
       scale: {x: 1, y: 1.00000012, z: 1.00000012}
       transformModified: 1
     - name: Bip001 R Hand

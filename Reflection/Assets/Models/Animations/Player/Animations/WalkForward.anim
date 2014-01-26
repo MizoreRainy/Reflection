@@ -13112,13 +13112,13 @@ AnimationClip:
     m_StartTime: 0
     m_StopTime: 1
     m_OrientationOffsetY: 2.67000008
-    m_Level: 0
+    m_Level: -.150000006
     m_CycleOffset: 0
     m_LoopTime: 1
     m_LoopBlend: 1
     m_LoopBlendOrientation: 1
     m_LoopBlendPositionY: 1
-    m_LoopBlendPositionXZ: 0
+    m_LoopBlendPositionXZ: 1
     m_KeepOriginalOrientation: 0
     m_KeepOriginalPositionY: 0
     m_KeepOriginalPositionXZ: 0
@@ -26911,18 +26911,4 @@ AnimationClip:
     path: CGunPivot/hand_right
     classID: 4
     script: {fileID: 0}
-  m_Events:
-  - time: .373880237
-    functionName: PlayRandomFootstepSound
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: .888405383
-    functionName: PlayRandomFootstepSound
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []

@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Paper
+  m_Shader: {fileID: 4800000, guid: 29b901681d68543499b369a69164e13e, type: 3}
+  m_ShaderKeywords: []
+  m_CustomRenderQueue: -1
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 7570e008ac8e39e4da02b6d8044e08a6, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _BumpMap
+        second:
+          m_Texture: {fileID: 2800000, guid: 975ae5cea15276b46b7e5f241c16cc65, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DissolveSrc
+        second:
+          m_Texture: {fileID: 2800000, guid: 0df7a0b61c9dfa6408ae01459c10ffec, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _DissolveSrcBump
+        second:
+          m_Texture: {fileID: 2800000, guid: d1cb14d9de80d0d4383d0be085d7f5a1, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Shininess
+        second: 1
+      data:
+        first:
+          name: _Amount
+        second: .366516471
+      data:
+        first:
+          name: _StartAmount
+        second: .150000006
+      data:
+        first:
+          name: _Illuminate
+        second: .320754707
+      data:
+        first:
+          name: _Tile
+        second: 1
+    m_Colors:
+      data:
+        first:
+          name: _Color
+        second: {r: .880596995, g: .880596995, b: .880596995, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: .5, g: .5, b: .5, a: 1}
+      data:
+        first:
+          name: _DissColor
+        second: {r: 1, g: .314685285, b: 0, a: 1}
+      data:
+        first:
+          name: _ColorAnimate
+        second: {r: 1, g: 0, b: 0, a: 0}
+--- !u!1002 &2100001
+EditorExtensionImpl:
+  serializedVersion: 6

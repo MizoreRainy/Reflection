@@ -2,28 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class RabbitsPool 
+public class RabbitsPool : MonoBehaviour
 {
 	//------------------------------------------------------------------------
 	
 	#region Singleton Implementation
 	
-	public	static 	RabbitsPool		instance
-	{
-		get
-		{
-			if(_instance == null)
-				_instance = new RabbitsPool();
-
-			return _instance;
-		}
-	}
-
-	private static 	RabbitsPool		_instance;
-	private RabbitsPool()			
-	{
-		rabbitsList		=	new List<Transform>();
-	}
+	public	static 	RabbitsPool		instance;
 	
 	#endregion
 	
@@ -31,7 +16,14 @@ public class RabbitsPool
 
 	public	int					maxRabbit		=	6;
 
-	private	List<Transform>		rabbitsList;
+	private	List<Transform>		rabbitsList		=	new List<Transform>();
+	
+	//------------------------------------------------------------------------
+
+	void Awake()
+	{
+		instance	=	this;
+	}
 	
 	//------------------------------------------------------------------------
 	
@@ -45,7 +37,7 @@ public class RabbitsPool
 		
 		for(int i = 0; i < maxRabbit; i++)
 		{
-			Transform	_rabbit		=	UnityEditor.Editor.Instantiate( _rabbitTransform )  as Transform;
+			Transform	_rabbit		=	Instantiate( _rabbitTransform )  as Transform;
 			rabbitsList.Add( _rabbit );
 
 			_rabbit.parent	=	_parent;
@@ -63,13 +55,36 @@ public class RabbitsPool
 		{
 			if( rabbitsList[i].gameObject.activeInHierarchy || !rabbitsList[i].name.Contains("Good")  )
 				continue;
-			
+
+			rabbitsList[i].gameObject.name	=	rabbitsList[i].gameObject.name + i;
 			rabbitsList[i].gameObject.SetActive( true );
 			_rabbit		=	rabbitsList[i];
 			break;
 		}
 		
 		return _rabbit;
+	}
+	
+	//------------------------------------------------------------------------
+	
+	public void GiveBullet() 
+	{
+		List<RabbitAI>	_rabbitList		=	new List<RabbitAI>();
+		for(int i = 0; i < rabbitsList.Count; i++)
+		{
+			if( !rabbitsList[i].gameObject.activeInHierarchy || !rabbitsList[i].name.Contains("Good") )
+				continue;
+
+			RabbitAI	_rabbitAI	=	rabbitsList[i].gameObject.GetComponent<RabbitAI>();
+
+			if(!_rabbitAI.isHaveBullet)
+			{
+				_rabbitList.Add(_rabbitAI);
+			}
+		}
+
+		int	_randomIndex	=	Random.Range(0, _rabbitList.Count);
+		_rabbitList[_randomIndex].RecieveBullet();
 	}
 	
 	//------------------------------------------------------------------------

@@ -7,7 +7,10 @@ public enum RabbitState
 	idle		=	0,
 	roaming		=	1,
 	chasing		=	2,
-	attacking	=	3
+	attacking	=	3,
+	charge		=	4,
+	runaway		=	5,
+	dead		=	6
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -21,13 +24,19 @@ public class RabbitAI : MonoBehaviour
 	public	bool				isHaveBullet			=	true;
 	
 	//------------------------------------------------------------------------
-
+	
+	public	float				chargeDelay				=	2f;
 	public	float				idleDelay				=	2f;
 	public	float				sightRange				=	2.5f;
 	public	float				interactiveRange		=	1.5f;
 	public	float				nextWaypointOffset		=	1.5f;
-    public  float               chasing_Speed           =   2.5f;
-    public  float               roaming_Speed           =   1f;
+    public  float               chasingSpeed           	=   .85f;
+	public  float               roamingSpeed			=   2.5f;
+	public  float               chargingSpeed			=   3f;
+	
+	//------------------------------------------------------------------------
+
+	public  Collider              hitSensor;
 	
 	//------------------------------------------------------------------------
 	
@@ -37,6 +46,10 @@ public class RabbitAI : MonoBehaviour
 	
 	public	CollideSensor		sightSensor;
 	public	CollideSensor		interactiveSensor;
+	
+	//------------------------------------------------------------------------
+	
+	public	RabbitSoundController			soundController;
 	
 	//------------------------------------------------------------------------
 	
@@ -65,7 +78,6 @@ public class RabbitAI : MonoBehaviour
 		trans			=	transform;
 		agent			=	GetComponent<NavMeshAgent>();
 		animController	=	GetComponent<RabbitAnimationController>();
-		animController.SetGood( isGood );
 
 		target			=	null;
 
@@ -110,18 +122,21 @@ public class RabbitAI : MonoBehaviour
 	
 	public void MoveToNextWaypoint()
 	{
-		if( waypointList.Count <= 1 )
+		if(state != RabbitState.dead)
 		{
-			Debug.LogError( "Can't find next waypoint" );
-			return;
+			if( waypointList.Count <= 1 )
+			{
+				Debug.LogError( "Can't find next waypoint" );
+				return;
+			}
+			
+			Vector3	_nextWaypoint	=	waypointList[ Random.Range(0, waypointList.Count)];
+			
+			while( _nextWaypoint == agent.destination )
+				_nextWaypoint	=	waypointList[ Random.Range(0, waypointList.Count)];
+			
+			agent.SetDestination( _nextWaypoint );
 		}
-		
-		Vector3	_nextWaypoint	=	waypointList[ Random.Range(0, waypointList.Count)];
-		
-		while( _nextWaypoint == agent.destination )
-			_nextWaypoint	=	waypointList[ Random.Range(0, waypointList.Count)];
-		
-		agent.SetDestination( _nextWaypoint );
 
 	}
 
@@ -133,11 +148,14 @@ public class RabbitAI : MonoBehaviour
 
 	void OnEnterSight(GameObject _go)
 	{
-		if( _go.CompareTag("Player") )
+		if(state != RabbitState.dead)
 		{
-			target	=	_go.transform;
+			if( _go.CompareTag("Player") )
+			{
+				target	=	_go.transform;
 
-			StartChasing();
+				StartChasing();
+			}
 		}
 	}
 	
@@ -145,11 +163,14 @@ public class RabbitAI : MonoBehaviour
 	
 	void OnLeaveSight(GameObject _go)
 	{
-		if( _go.CompareTag("Player") )
+		if(state != RabbitState.dead)
 		{
-			target	=	null;
+			if( _go.CompareTag("Player") )
+			{
+				target	=	null;
 
-			SetRoamingState(false);
+				SetRoamingState(false);
+			}
 		}
 	}
 	
@@ -157,9 +178,12 @@ public class RabbitAI : MonoBehaviour
 	
 	void OnEnterInteractive(GameObject _go)
 	{
-		if( _go.CompareTag("Player") )
+		if(state != RabbitState.dead)
 		{
-			InteractWithPlayer(_go);
+			if( _go.CompareTag("Player") )
+			{
+				InteractWithPlayer(_go);
+			}
 		}
 	}
 	
@@ -180,12 +204,12 @@ public class RabbitAI : MonoBehaviour
 				if( _isDrawline )
 					Debug.DrawLine (trans.position, _hit.point, Color.red);
 
-				Debug.Log("Found 'ya you little bitch!!");
+//				Debug.Log("Found 'ya you little bitch!!");
 				return true;
 			}
 		} 
 		
-		Debug.Log("Where are you, I'm gonna fucking kill you!");
+//		Debug.Log("Where are you, I'm gonna fucking kill you!");
 		return false;
 	}
 
@@ -199,7 +223,10 @@ public class RabbitAI : MonoBehaviour
 	{
 		idleDelayCount	=	0f;
 		state			=	RabbitState.idle;
+
+		agent.SetDestination(trans.position);
 		animController.SetAnimationState( RabbitAnimationState.Idle );
+		soundController.PlaySound( SoundType.idle );
 	}
 	
 	//------------------------------------------------------------------------
@@ -208,21 +235,77 @@ public class RabbitAI : MonoBehaviour
 	{
 		state	=	RabbitState.roaming;
 		animController.SetAnimationState( RabbitAnimationState.Walk );
-        agent.speed = roaming_Speed;
+        agent.speed = roamingSpeed;
 
 		if( _isMoveNext )
 			MoveToNextWaypoint();
 	}
-
+	
 	//------------------------------------------------------------------------
-
+	
 	void StartChasing()
 	{
 		if( IsPlayerOnSight() )
 		{
 			state	=	RabbitState.chasing;
-            agent.speed = chasing_Speed;
+			agent.speed = chasingSpeed;
+			soundController.PlaySound( SoundType.idle );
 		}
+	}
+	
+	//------------------------------------------------------------------------
+
+	void StartCharging(GameObject _target)
+	{
+		agent.speed		=	chargingSpeed;
+		agent.SetDestination( _target.transform.position );
+		animController.SetAnimationState( RabbitAnimationState.Action );
+	}
+	
+	//------------------------------------------------------------------------
+	
+	IEnumerator WaitThenDo(float _delay, System.Action _callback, bool _isIgnoreDead = false)
+	{
+		float	_startTime	=	Time.time;
+		float	_endTime	=	_startTime + _delay;
+		
+//		Debug.Log("WAIT");
+		while( Time.time < _endTime )
+		{
+			yield return new WaitForSeconds (.5f);
+
+//			Debug.Log( "_startTime: " + _startTime + "\n" + "_endTime: " + _endTime );
+		}
+		
+		if(state != RabbitState.dead)
+			_callback();
+		else if (_isIgnoreDead)
+			_callback();
+
+	}
+	
+	//------------------------------------------------------------------------
+	
+	void StartRunaway()
+	{
+		target	=	null;
+		MoveToNextWaypoint();
+		StartCoroutine( WaitThenDo( chargeDelay, SetRoamingState ) );
+	}
+	
+	//------------------------------------------------------------------------
+	
+	public void RecieveBullet()
+	{
+		Debug.Log("GETGETGET");
+		isHaveBullet	=	true;
+	}
+	
+	//------------------------------------------------------------------------
+	
+	void Falldown()
+	{
+		hitSensor.enabled	=	false;
 	}
 	
 	//------------------------------------------------------------------------
@@ -231,28 +314,50 @@ public class RabbitAI : MonoBehaviour
 	{
 		if( !isGood )
 		{
+			StartCharging(_player);
 			_player.SendMessage("GetHit");
+			soundController.PlaySound( SoundType.attack );
 		}
 		else
 		{
+
+			StartCharging(_player);
+			StartCoroutine( WaitThenDo( chargeDelay, StartRunaway ) );
+
 			if( isHaveBullet )
 			{
 				isHaveBullet	=	false;
 				_player.SendMessage("GiveBullet");
-				animController.SetAnimationState( RabbitAnimationState.Action );
-			}
-			else
-			{
-				animController.SetAnimationState( RabbitAnimationState.Action );
+				soundController.PlaySound( SoundType.givebullet );
 			}
 		}
 	}
 	
 	//------------------------------------------------------------------------
-	
+
+	public GameObject fx_dead;
+
 	void GetHit()
 	{
-		animController.SetAnimationState( RabbitAnimationState.Dead );
+		if(state != RabbitState.dead)
+		{
+			state	=	RabbitState.dead;
+			agent.SetDestination( trans.position );
+			agent.Stop();
+			agent.enabled		=	false;
+			if(hitSensor)
+			{
+				Debug.Log("TEST");
+				rigidbody.AddTorque( new Vector3(.5f, 15f, .5f) );
+				rigidbody.AddForce( new Vector3(1.5f, 2f, 1.5f) );
+				Destroy(Instantiate(fx_dead,transform.position+Vector3.up,transform.rotation),4);
+				soundController.PlaySound( SoundType.dead );
+				StartCoroutine( WaitThenDo( 4f, Falldown, true ) );
+			}
+			
+			animController.Revealed();
+			animController.SetAnimationState( RabbitAnimationState.Dead );
+		}
 	}
 
 	#endregion
@@ -263,6 +368,9 @@ public class RabbitAI : MonoBehaviour
 
 	void Update () 
 	{
+		if(state ==  RabbitState.dead)
+			return;
+
 		if( state == RabbitState.idle )
 		{
 			IdleUpdate();

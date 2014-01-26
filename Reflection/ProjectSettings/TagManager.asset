@@ -4,6 +4,11 @@
 TagManager:
   tags:
   - 
+  - Fire
+  - bad_bunny
+  - good_bunny
+  - fader
+  - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
   Builtin Layer 2: Ignore Raycast
@@ -15,9 +20,9 @@ TagManager:
   User Layer 8: NGUI
   User Layer 9: Wall
   User Layer 10: Player
-  User Layer 11: 
-  User Layer 12: 
-  User Layer 13: 
+  User Layer 11: horror
+  User Layer 12: Wall
+  User Layer 13: Good
   User Layer 14: 
   User Layer 15: 
   User Layer 16: 

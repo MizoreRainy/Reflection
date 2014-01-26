@@ -746,7 +746,7 @@ AnimationClip:
     classID: 4
     script: {fileID: 0}
   m_Events:
-  - time: .0166666675
+  - time: .0666666701
     functionName: MakeBullet
     data: 
     objectReferenceParameter: {fileID: 0}

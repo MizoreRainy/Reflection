@@ -56,6 +56,13 @@ public class RabbitAnimationController : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
+	public void Revealed () 
+	{
+
+	}
+	
+	//------------------------------------------------------------------------
+	
 	void PlayDeath () 
 	{
 		for(int i = 0; i < rabbitAnimator.Length; i++)
@@ -70,18 +77,17 @@ public class RabbitAnimationController : MonoBehaviour
 	{
 		for(int i = 0; i < rabbitAnimator.Length; i++)
 		{
-			rabbitAnimator[i].SetBool( "isHaveBullet", rabbitAI.isHaveBullet );
-			rabbitAnimator[i].SetTrigger("Action");
-		}
-	}
-	
-	//------------------------------------------------------------------------
-	
-	public void SetGood (bool _isGood) 
-	{
-		for(int i = 0; i < rabbitAnimator.Length; i++)
-		{
-			rabbitAnimator[i].SetBool("isGood", _isGood);
+			if(!rabbitAI.isGood)
+			{
+				rabbitAnimator[i].Play("Attacking");
+			}
+			else
+			{
+				if(rabbitAI.isHaveBullet)
+					rabbitAnimator[i].Play("GiveBullet");
+				else
+					rabbitAnimator[i].Play("Dance");
+			}
 		}
 	}
 	

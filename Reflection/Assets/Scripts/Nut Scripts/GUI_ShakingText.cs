@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GUI_ShakingText : MonoBehaviour {
 
-
     private Vector3 originPosition;
     private float shake_decay;
     private bool _isEndless;

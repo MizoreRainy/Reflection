@@ -23,6 +23,10 @@ public class AIManager : MonoBehaviour
 	public Transform	badRabbitTransform;
 	
 	//------------------------------------------------------------------------
+
+	public	Player		player;
+	
+	//------------------------------------------------------------------------
 	
 	void Awake () 
 	{
@@ -96,9 +100,9 @@ public class AIManager : MonoBehaviour
 	
 	//------------------------------------------------------------------------
 	
-	void SpawnRabbits () 
+	public void MissBullet () 
 	{
-		
+		RabbitsPool.instance.GiveBullet();
 	}
 	
 	//------------------------------------------------------------------------
